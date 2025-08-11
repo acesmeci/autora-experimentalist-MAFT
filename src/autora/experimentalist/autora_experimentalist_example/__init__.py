@@ -8,10 +8,10 @@ from typing import Union, List
 
 
 def sample(
-        conditions: Union[pd.DataFrame, np.ndarray],
-        models: List,
-        reference_conditions: Union[pd.DataFrame, np.ndarray],
-        num_samples: int = 1) -> pd.DataFrame:
+        conditions: Union[pd.DataFrame, np.ndarray], # essential
+        models: List, 
+        reference_conditions: Union[pd.DataFrame, np.ndarray], # already sampled conditions, see novelty conditions (maximum distance)
+        num_samples: int = 1) -> pd.DataFrame: # essential 
     """
     Add a description of the sampler here.
 
@@ -35,9 +35,15 @@ def sample(
         3
 
     """
+
     if num_samples is None:
         num_samples = conditions.shape[0]
 
-    new_conditions = conditions
+    # shape: n_samples | n_X's : Shape of matrix (X values vs amount of x's) pick rows to pick 
+
+
+    random_indices = np.random.choice(list(range(len(conditions))), num_samples)
+    new_conditions = conditions.iloc[random_indices]
+
 
     return new_conditions[:num_samples]
