@@ -2,7 +2,7 @@
 # UPDATE THIS BEFORE PUBLISHING
 name = "autora_experimentalist_MAFT"
 description = "This is an experimentalist made by team MAFT."
-authors = [ ### { name = "FirstName LastName", email = "your@email.de" }]
+authors = [{ name = "Team MAFT", email = "your@email.de" }]
 dynamic = ["version"]
 
 readme = "README.md"
