@@ -1,8 +1,8 @@
 [project]
 # UPDATE THIS BEFORE PUBLISHING
-name = "autora_experimentalist_example"
-description = "This is an example experimentalist."
-authors = [{ name = "FirstName LastName", email = "your@email.de" }]
+name = "autora_experimentalist_MAFT"
+description = "This is an experimentalist made by team MAFT."
+authors = [{ name = "Team MAFT" }]
 dynamic = ["version"]
 
 readme = "README.md"
@@ -27,8 +27,8 @@ dev = [
 
 [project.urls]
 homepage = "http://www.empiricalresearch.ai"
-repository = "https://github.com/musslick/autora-experimentalist-challenge"
-documentation = "https://autoresearch.github.io/autora/"
+repository = "https://github.com/acesmeci/autora-experimentalist-MAFT"
+documentation = "https://acesmeci.github.io/autora-experimentalist-MAFT/"
 
 
 [build-system]
