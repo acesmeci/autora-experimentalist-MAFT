@@ -94,58 +94,6 @@ def _under_coverage_weights(candidates: pd.DataFrame, tested: pd.DataFrame, cols
     return (weights / s) if s > 0 else np.full_like(weights, 1.0 / len(weights))
 
 
-# ---------- 2) Random-Subset Novelty (RSN) ----------
-
-def sample_rsn(
-    conditions: Union[pd.DataFrame, np.ndarray],          # tested so far
-    reference_conditions: Union[pd.DataFrame, np.ndarray],# full grid / pool
-    num_samples: int = 1,
-    epsilon: float = 0.3,
-    subset_factor: int = 5,       # subset size ≈ subset_factor * num_samples
-    subset_cap: int = 200,        # hard cap on subset size
-    random_state: Optional[int] = None,
-) -> pd.DataFrame:
-    """
-    ε-random; otherwise run greedy max–min novelty **inside a random subset** of the pool.
-    Keeps representativeness while still exploiting novelty.
-    """
-    # normalize inputs
-    reference_conditions = pd.DataFrame(reference_conditions).copy()
-    conditions = pd.DataFrame(conditions).copy()
-    rng = np.random.default_rng(random_state)
-
-    # build candidate pool (exclude tested)
-    candidates = _anti_join(reference_conditions, conditions)
-    if candidates.empty:
-        return pd.DataFrame(columns=reference_conditions.columns).reset_index(drop=True)
-    if len(candidates) <= num_samples:
-        return candidates.reset_index(drop=True)
-
-    # cold start → random
-    if conditions.empty:
-        return candidates.sample(n=num_samples, random_state=random_state).reset_index(drop=True)
-
-    # grid scalers + arrays
-    rc_min, rc_rng, num_cols = _grid_scalers(reference_conditions)
-    tested_arr = _scale(conditions, rc_min, rc_rng, num_cols)
-
-    # ε-explore
-    if rng.random() < epsilon:
-        return candidates.sample(n=num_samples, random_state=random_state).reset_index(drop=True)
-
-    # exploit within random subset
-    m = min(max(num_samples, subset_factor * num_samples), subset_cap, len(candidates))
-    sub = candidates.sample(n=m, random_state=random_state, replace=False)
-
-    return _greedy_maxmin_subset(
-        subset_df=sub,
-        tested_arr=tested_arr,
-        rc_min=rc_min, rc_rng=rc_rng, cols=num_cols,
-        k=num_samples,
-        rng=rng,
-    )
-
-
 # ---------- 3) Stratified (under-covered) + RSN ----------
 
 def sample_stratified_rsn(
