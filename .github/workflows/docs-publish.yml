@@ -3,7 +3,7 @@ name: Publish Documentation to GitHub Pages
 on:
   push:
     branches:
-      - add-docs-hosting
+      - main
 
 permissions:
   contents: write
